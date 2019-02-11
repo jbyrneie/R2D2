@@ -87,7 +87,7 @@ _brs_recursive = function(teeTime, phpsessid) {
         console.log(`A Tee-time for ${teeTime} is unavailable on ${dateRequired}`);
         break;
       case status.ALREADY_BOOKED_BY_YOU:
-        console.log(`What are doing, you have already booked a Tee-time for ${time} on ${dateRequired}`);
+        console.log(`What are doing, you have already booked a Tee-time for ${teeTime} on ${dateRequired}`);
         break;
       case status.ALREADY_BOOKED:
         console.log(`Bummer the Tee-time for ${teeTime} for ${dateRequired} is already taken`);
