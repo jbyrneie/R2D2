@@ -57,15 +57,15 @@ _book_tee_time = function () {
   })
 }
 
-_brs_recursive = function (teeTime, phpsessid) {
-  console.log(`_brs_recursive teeTime:${teeTime} phpsessid: ${phpsessid}`)
+_brs_recursive = function (teeTime, data) {
+  console.log(`_brs_recursive teeTime:${teeTime}`)
 
   brs
     .book_the_tee_time_recursive(
       dateRequired,
       teeTime,
       dateComesAlive,
-      phpsessid,
+      data,
       player1UID,
       player2UID,
       player3UID,
@@ -148,8 +148,8 @@ start = async function () {
   console.log('lets go...')
   const response = await brs.login(login, password)
   if (response.status == status.LOGGED_IN) {
-    console.log('Logged In, ready to go.....\n\n')
-    _brs_recursive(teeTime, response.phpsessid)
+    console.log(`Logged In, ready to go.....  \n\n`)
+    _brs_recursive(teeTime, response.data)
   } else console.log('Login failed..... goodbye\n\n')
 }
 
