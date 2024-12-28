@@ -1,4 +1,5 @@
 const brs = require('./lib/book_tee_time')
+const whatsApp = require('./lib/messaging')
 const moment = require('moment')
 const profile = require('./profile')
 const status = require('./lib/status')
@@ -10,6 +11,7 @@ let dateRequired = profile.config.whichProfile.dateRequired
 let login = profile.config.login
 let password = profile.config.password
 let dateComesAlive = profile.config.whichProfile.dateComesAlive
+let testMode = profile.config.testMode
 const player1UID = profile.config.whichProfile.player1UID
 const player2UID = profile.config.whichProfile.player2UID
 const player3UID = profile.config.whichProfile.player3UID
@@ -30,31 +32,6 @@ _get_time_difference = function (dateComesAlive) {
   const comesAlive = moment(dateComesAlive, 'YYYY-MM-DD HH:mm:ss')
   const now = moment(new Date())
   return moment.duration(comesAlive.diff(now)).asSeconds()
-}
-
-_book_tee_time = function () {
-  return new Promise(function (resolve, reject) {
-    brs
-      .book_tee_time(
-        login,
-        password,
-        dateRequired,
-        teeTime,
-        dateComesAlive,
-        player1UID,
-        player2UID,
-        player3UID,
-        player4UID
-      )
-      .then(response => {
-        console.log('brs.book_tee_time response: ', JSON.stringify(response))
-        resolve(response)
-      })
-      .catch(function (err) {
-        console.log('_book_tee_time error: ', err)
-        resolve({ status: status.STATUS_CODE.ERROR, phpsessid: null })
-      })
-  })
 }
 
 _brs_recursive = async function (teeTime, data) {
@@ -95,7 +72,7 @@ _brs_recursive = async function (teeTime, data) {
           } seconds as time_diff is: ${_seconds_to_time(timeDiff >= 0 ? timeDiff : -timeDiff)}\n\n`
         )
         setTimeout(async function () {
-          await _brs_recursive(teeTime, response.phpsessid)
+          await _brs_recursive(teeTime, data)
         }, sleeptime)
       } else console.log('Giving up.... exceeded notLiveRetries.... goodbye')
       break
@@ -117,7 +94,7 @@ _brs_recursive = async function (teeTime, data) {
       if (retries <= 3) {
         teeTime = moment(teeTime, 'HH:mm').add(10, 'minutes').format('HH:mm')
         console.log(`retry[${retries}]: ${status.STATUS_CODE[response.status]}\n\n`)
-        await _brs_recursive(teeTime, response.phpsessid)
+        await _brs_recursive(teeTime, data)
       }
       break
     case status.error:
@@ -128,17 +105,9 @@ _brs_recursive = async function (teeTime, data) {
   }
 }
 
-/*
-_book_tee_time()
-.then((response) => {
-  if (response.status != status.BOOKED) {
-    console.log('Not booked yet..... go again.....\n\n');
-    _brs_recursive(teeTime, response.phpsessid)
-  }
-})
-*/
 start = async function () {
   console.log('lets go...')
+
   const response = await brs.login(login, password)
   if (response.status == status.LOGGED_IN) {
     console.log(`Logged In, ready to go.....  \n\n`)
