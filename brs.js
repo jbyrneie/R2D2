@@ -17,9 +17,7 @@ const player2UID = profile.config.whichProfile.player2UID
 const player3UID = profile.config.whichProfile.player3UID
 const player4UID = profile.config.whichProfile.player4UID
 
-console.log(
-  `login: ${profile.config.login} password: ${profile.config.password} dateRequired: ${dateRequired} teeTime: ${teeTime} dateComesAlive: ${dateComesAlive}`
-)
+console.log(`Booking dateRequired: ${dateRequired} teeTime: ${teeTime} dateComesAlive: ${dateComesAlive}`)
 
 _seconds_to_time = function (seconds) {
   let measuredTime = new Date(null)
@@ -28,14 +26,14 @@ _seconds_to_time = function (seconds) {
 }
 
 _get_time_difference = function (dateComesAlive) {
-  console.log('_get_time_difference: ', dateComesAlive)
+  //console.log('_get_time_difference: ', dateComesAlive)
   const comesAlive = moment(dateComesAlive, 'YYYY-MM-DD HH:mm:ss')
   const now = moment(new Date())
   return moment.duration(comesAlive.diff(now)).asSeconds()
 }
 
 _brs_recursive = async function (teeTime, data) {
-  console.log(`_brs_recursive teeTime:${teeTime}`)
+  //console.log(`_brs_recursive teeTime:${teeTime}`)
 
   let response = await brs.book_the_tee_time_recursive(
     dateRequired,
@@ -51,7 +49,7 @@ _brs_recursive = async function (teeTime, data) {
   switch (response.status) {
     case status.NOT_LIVE_YET:
       let timeDiff = _get_time_difference(dateComesAlive)
-      console.log('timeDiff: ', timeDiff)
+      //console.log('timeDiff: ', timeDiff)
       let sleepTime = 0
 
       if (timeDiff > 90) sleeptime = 60000
@@ -106,11 +104,11 @@ _brs_recursive = async function (teeTime, data) {
 }
 
 start = async function () {
-  console.log('lets go...')
+  //console.log('lets go...')
 
   const response = await brs.login(login, password)
   if (response.status == status.LOGGED_IN) {
-    console.log(`Logged In, ready to go.....  \n\n`)
+    //console.log(`Logged In, ready to go.....  \n\n`)
     await _brs_recursive(teeTime, response.data)
   } else console.log('Login failed..... goodbye\n\n')
 }
