@@ -78,7 +78,13 @@ _brs_recursive = async function (options, data) {
       console.log(`A Tee-time for ${teeTime} has been booked ${options.dateRequired}`)
       break
     case status.UNAVAILABLE:
-      console.log(`A Tee-time for ${teeTime} is unavailable on ${options.dateRequired}`)
+      console.log(`Trying the next tee-time ${retries}`)
+      retries++
+
+      if (retries <= 3) {
+        options.teeTime = moment(options.teeTime, 'HH:mm').add(10, 'minutes').format('HH:mm').toString()
+        await _brs_recursive(options, data)
+      } else console.log('Giving up.... exceeded retries.... goodbye')
       break
     case status.ALREADY_BOOKED_BY_YOU:
       console.log(`What are doing, you have already booked a Tee-time for ${teeTime} on ${options.dateRequired}`)
