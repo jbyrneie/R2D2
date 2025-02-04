@@ -33,18 +33,58 @@ _get_time_difference = function (dateComesAlive) {
   return moment.duration(comesAlive.diff(now)).asSeconds()
 }
 
+_who_is_playing = function (options) {
+  let whoIsPlaying = []
+
+  if (options.golfers === null || options.golfers.length === 0) {
+    console.log(`\n***Nooooo players specified\n\n`)
+    return null
+  }
+
+  const player1 = players[options.golfers[0].toUpperCase()]
+  const player2 = players[options.golfers[1].toUpperCase()]
+  const player3 = players[options.golfers[2].toUpperCase()]
+  const player4 = players[options.golfers[3].toUpperCase()]
+
+  if (player1 != 'undefined') whoIsPlaying.push(player1)
+  else {
+    console.log(`\n***Player ${options.golfers[0]} does not exist\n\n`)
+    return null
+  }
+
+  if (player2 != 'undefined') whoIsPlaying.push(player2)
+  else {
+    console.log(`\n***Player ${options.golfers[1]} does not exist\n\n`)
+    return null
+  }
+
+  if (player3 != 'undefined') whoIsPlaying.push(player3)
+  else {
+    console.log(`\n***Player ${options.golfers[2]} does not exist\n\n`)
+    return null
+  }
+
+  if (player4 != undefined) whoIsPlaying.push(player4)
+  else {
+    console.log(`\n***Player ${options.golfers[3]} does not exist\n\n`)
+    return null
+  }
+
+  return whoIsPlaying
+}
+
 _brs_recursive = async function (options, data) {
-  console.log(`options: ${JSON.stringify(options)}`)
   let teeTime = options.teeTime
+
+  options.golferIDs = _who_is_playing(options)
+  if (!options.golferIDs) return
+
   let response = await brs.book_the_tee_time_recursive(
     options.dateRequired,
     teeTime,
     options.dateComesAlive,
     data,
-    options.golfers[0] ? players[options.golfers[0].toUpperCase()] : null,
-    options.golfers[1] ? players[options.golfers[1].toUpperCase()] : null,
-    options.golfers[2] ? players[options.golfers[2].toUpperCase()] : null,
-    options.golfers[3] ? players[options.golfers[3].toUpperCase()] : null
+    options.golferIDs
   )
 
   switch (response.status) {
@@ -75,10 +115,15 @@ _brs_recursive = async function (options, data) {
       } else console.log('Giving up.... exceeded notLiveRetries.... goodbye')
       break
     case status.BOOKED:
-      console.log(`A Tee-time for ${teeTime} has been booked ${options.dateRequired}`)
+      console.log(`A Tee-time for ${teeTime} on ${options.dateRequired} has been booked\n`)
       break
     case status.UNAVAILABLE:
-      console.log(`Trying the next tee-time ${retries}`)
+      console.log(
+        `Trying the next tee-time ${moment(options.teeTime, 'HH:mm')
+          .add(10, 'minutes')
+          .format('HH:mm')
+          .toString()} ${retries}\n`
+      )
       retries++
 
       if (retries <= 3) {
@@ -127,9 +172,6 @@ start = async function () {
   }
 
   const options = commandLineArgs(optionDefinitions)
-
-  console.log(`options: ${JSON.stringify(options)}`)
-
   const response = await brs.login(options.userName, options.password)
   if (response.status == status.LOGGED_IN) {
     await _brs_recursive(options, response.data)
