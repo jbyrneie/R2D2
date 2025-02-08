@@ -41,31 +41,31 @@ _who_is_playing = function (options) {
     return null
   }
 
-  const player1 = players[options.golfers[0].toUpperCase()]
-  const player2 = players[options.golfers[1].toUpperCase()]
-  const player3 = players[options.golfers[2].toUpperCase()]
-  const player4 = players[options.golfers[3].toUpperCase()]
+  const player1 = players[options.golfers[0]] != undefined ? players[options.golfers[0].toUpperCase()] : null
+  const player2 = players[options.golfers[1]] != undefined ? players[options.golfers[1].toUpperCase()] : null
+  const player3 = players[options.golfers[2]] != undefined ? players[options.golfers[2].toUpperCase()] : null
+  const player4 = players[options.golfers[3]] != undefined ? players[options.golfers[3].toUpperCase()] : null
 
-  if (player1 != 'undefined') whoIsPlaying.push(player1)
-  else {
+  if (player1 != undefined) whoIsPlaying.push(player1)
+  else if (players[options.golfers[0]] !== undefined) {
     console.log(`\n***Player ${options.golfers[0]} does not exist\n\n`)
     return null
   }
 
-  if (player2 != 'undefined') whoIsPlaying.push(player2)
-  else {
+  if (player2 != undefined) whoIsPlaying.push(player2)
+  else if (players[options.golfers[1]] !== undefined) {
     console.log(`\n***Player ${options.golfers[1]} does not exist\n\n`)
     return null
   }
 
-  if (player3 != 'undefined') whoIsPlaying.push(player3)
-  else {
+  if (player3 !== null) whoIsPlaying.push(player3)
+  else if (players[options.golfers[2]] !== undefined) {
     console.log(`\n***Player ${options.golfers[2]} does not exist\n\n`)
     return null
   }
 
   if (player4 != undefined) whoIsPlaying.push(player4)
-  else {
+  else if (players[options.golfers[3]] !== undefined) {
     console.log(`\n***Player ${options.golfers[3]} does not exist\n\n`)
     return null
   }
