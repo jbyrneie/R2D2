@@ -34,6 +34,7 @@ _get_time_difference = function (dateComesAlive) {
 }
 
 _who_is_playing = function (options) {
+  console.log(`_who_is_playing options: ${JSON.stringify(options.golfers)}`)
   let whoIsPlaying = []
 
   if (options.golfers === null || options.golfers.length === 0) {
@@ -46,26 +47,26 @@ _who_is_playing = function (options) {
   const player3 = players[options.golfers[2]] != undefined ? players[options.golfers[2].toUpperCase()] : null
   const player4 = players[options.golfers[3]] != undefined ? players[options.golfers[3].toUpperCase()] : null
 
-  if (player1 != undefined) whoIsPlaying.push(player1)
-  else if (players[options.golfers[0]] !== undefined) {
+  if (player1 !== null) whoIsPlaying.push(player1)
+  else if (options.golfers[0] !== undefined) {
     console.log(`\n***Player ${options.golfers[0]} does not exist\n\n`)
     return null
   }
 
-  if (player2 != undefined) whoIsPlaying.push(player2)
-  else if (players[options.golfers[1]] !== undefined) {
+  if (player2 !== null) whoIsPlaying.push(player2)
+  else if (options.golfers[1] !== undefined) {
     console.log(`\n***Player ${options.golfers[1]} does not exist\n\n`)
     return null
   }
 
   if (player3 !== null) whoIsPlaying.push(player3)
-  else if (players[options.golfers[2]] !== undefined) {
+  else if (options.golfers[2] !== undefined) {
     console.log(`\n***Player ${options.golfers[2]} does not exist\n\n`)
     return null
   }
 
-  if (player4 != undefined) whoIsPlaying.push(player4)
-  else if (players[options.golfers[3]] !== undefined) {
+  if (player4 !== null) whoIsPlaying.push(player4)
+  else if (options.golfers[3] !== undefined) {
     console.log(`\n***Player ${options.golfers[3]} does not exist\n\n`)
     return null
   }
