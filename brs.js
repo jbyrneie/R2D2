@@ -18,7 +18,7 @@ const player2UID = profile.config.whichProfile.player2UID
 const player3UID = profile.config.whichProfile.player3UID
 const player4UID = profile.config.whichProfile.player4UID
 
-const players = { JACK: '64', PHILIP: '158', PADDY: '1239', CORMAC: '666', COLM: '566', GUEST: '-2' }
+const players = { JACK: '64', PHILIP: '158', PADDY: '1239', CORMAC: '666', COLM: '566', GIL: '2901' }
 
 _seconds_to_time = function (seconds) {
   let measuredTime = new Date(null)
