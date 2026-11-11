@@ -42,10 +42,14 @@ _who_is_playing = function (options) {
     return null
   }
 
-  const player1 = players[options.golfers[0]] != undefined ? players[options.golfers[0].toUpperCase()] : null
-  const player2 = players[options.golfers[1]] != undefined ? players[options.golfers[1].toUpperCase()] : null
-  const player3 = players[options.golfers[2]] != undefined ? players[options.golfers[2].toUpperCase()] : null
-  const player4 = players[options.golfers[3]] != undefined ? players[options.golfers[3].toUpperCase()] : null
+  const player1 =
+    players[options.golfers[0].toUpperCase()] != undefined ? players[options.golfers[0].toUpperCase()] : null
+  const player2 =
+    players[options.golfers[1].toUpperCase()] != undefined ? players[options.golfers[1].toUpperCase()] : null
+  const player3 =
+    players[options.golfers[2].toUpperCase()] != undefined ? players[options.golfers[2].toUpperCase()] : null
+  const player4 =
+    players[options.golfers[3].toUpperCase()] != undefined ? players[options.golfers[3].toUpperCase()] : null
 
   if (player1 !== null) whoIsPlaying.push(player1)
   else if (options.golfers[0] !== undefined) {
@@ -99,12 +103,14 @@ _brs_recursive = async function (options, data) {
       else if (timeDiff >= 1) sleeptime = 1000
       else if (timeDiff >= 0.4) sleeptime = 200
       else {
-        console.log(`Date comes alive is in the past ${options.dateComesAlive}`)
+        console.log(
+          `Booking should be alive dateComesAlive: ${options.dateComesAlive} currentTime: ${moment().format('YYYY-MM-DD:HH:mm:ss')}`
+        )
         sleeptime = 100
         notLiveRetries++
       }
 
-      if (notLiveRetries <= 3) {
+      if (notLiveRetries <= 10) {
         console.log(
           `Not Live Yet (retries: ${notLiveRetries}) so going to sleep for ${
             sleeptime / 1000
@@ -165,7 +171,7 @@ start = async function () {
     { name: 'golfers', alias: 'g', type: String, multiple: true, defaultOption: true }
   ]
 
-  if (process.argv.length < 15) {
+  if (process.argv.length < 14) {
     console.log(
       '\n\nusage: node brs.js -u <BRS_NUMBER> -p <PASSWORD> -a <YYYY-MM-DD:HH:MM> -d <YYYY-MM-DD:HH:MM> -g <PLAYERS> -t <HH:MM>\n\n'
     )
